@@ -1,4 +1,4 @@
-{
+const information = {
   "01.00.12.01": {
     "faculty": "ILMU KOMPUTER",
     "study_program": "Ilmu Komputer (Computer Science)",
@@ -44,4 +44,6 @@
     "study_program": "Ilmu Komputer (Computer Science)",
     "educational_program": "S1 Paralel (S1 Paralel)"
   }
-}
+};
+
+export default information;

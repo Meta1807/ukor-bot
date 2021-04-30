@@ -2,9 +2,9 @@ import express from 'express';
 import { Client, GuildMember, Collection } from 'discord.js';
 import fetch from 'node-fetch';
 import xml2js from 'xml2js';
-const { stripPrefix } = xml2js.processors;
-const jurusan = require('./information.json');
+import jurusan from './information';
 
+const { stripPrefix } = xml2js.processors;
 const app = express();
 const port = process.env.PORT || 80;
 
