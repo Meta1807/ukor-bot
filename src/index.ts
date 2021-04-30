@@ -29,10 +29,13 @@ client.on('guildMemberAdd', (member: Discord.GuildMember) => {
   verifyRequests.set(identifier, member);
   member.send(`
     Selamat datang di UKOR Fasilkom UI! Silahkan melakukan verifikasi akun SSO UI dengan
-    membuka tautan berikut ini: https://localhost:3000/verify/${identifier}
+    membuka tautan berikut ini: ${process.env.SERVICE_URI || "https://localhost:3000"}/verify/${identifier}
   `);
 });
 
 client.login(process.env.DISCORD_TOKEN);
 
 http(client, verifyRequests);
+
+// Export verifyRequests for use in other files
+export { verifyRequests }

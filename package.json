@@ -21,10 +21,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev ./src/index.ts",
     "start": "tsc --skipLibCheck && node dist/index.js",
-    "dev": "ts-node-dev ./src/index.ts"
+    "postinstall": "tsc",
+    "watch-node": "nodemon dist/index.js",
+    "watch-ts": "tsc -w"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": { "node": "12.16.3" }
 }

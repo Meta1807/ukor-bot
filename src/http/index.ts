@@ -8,11 +8,18 @@ const app = express();
 const port = 3000;
 
 const SSO = 'https://sso.ui.ac.id/cas2';
-const URI = (id) => encodeURI(`https://fd2fbaac8599.ap.ngrok.io/callback/${id}`);
+const URI = (id) => encodeURI(`${process.env.SERVICE_URI || "http://localhost:3000"}/callback/${id}`);
 
 const http = (client: Client, verifyRequests: Collection<string, GuildMember>) => {
   app.get('/verify/:id', (req, res) => {
-    res.redirect(`${SSO}/login?service=${URI(req.params.id)}`)
+    const request = verifyRequests.get(req.params.id);
+    if (request)
+      res.redirect(`${SSO}/login?service=${URI(req.params.id)}`);
+    else
+      res.send(`
+        <h1>The request does not exist or has expired.</h1>
+        <p>Please make another request by typing u!verify in the #verification-request channel.</p>
+      `);
   });
   
   app.get('/callback/:id', async (req, res) => {
@@ -40,13 +47,21 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
         <p>
           Selamat datang di UKOR FASILKOM UI, ${data.attributes[0].nama}
         </p>
-      `)
+      `);
+    } else {
+      res.send(`
+        <h1>
+          Verifikasi Gagal
+        </h1>
+        <p>
+          Silahkan melakukan verifikasi ulang dengan mengirim u!verify ke channel #verification-request.
+        </p>
+      `);
     }
-
   })
 
   app.listen(port, () => {
-    console.log(`HTTP Server listening at http://localhost:${port}`);
+    console.log(`HTTP Server listening at ${process.env.SERVICE_URI || "http://localhost:3000"}`);
   });
 };
 
