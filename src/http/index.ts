@@ -35,7 +35,7 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
       const user = verifyRequests.get(req.params.id)
 
       const role = user.guild.roles.cache
-        .find((role) => role.name == "Authorized");
+        .find((role) => role.name == process.env.AUTHORIZED_ROLE_NAME);
       user.roles.add(role);
       
       verifyRequests.delete(req.params.id);
