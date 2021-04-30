@@ -5,7 +5,7 @@ import xml2js from 'xml2js';
 const { stripPrefix } = xml2js.processors;
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 80;
 
 const SSO = 'https://sso.ui.ac.id/cas2';
 const URI = (id) => encodeURI(`${process.env.SERVICE_URI || "http://localhost:3000"}/callback/${id}`);
