@@ -3,12 +3,35 @@ import { Client, GuildMember, Collection } from 'discord.js';
 import fetch from 'node-fetch';
 import xml2js from 'xml2js';
 const { stripPrefix } = xml2js.processors;
+const jurusan = require('./information.json');
 
 const app = express();
 const port = process.env.PORT || 80;
 
 const SSO = 'https://sso.ui.ac.id/cas2';
 const URI = (id) => encodeURI(`${process.env.SERVICE_URI || "http://localhost:3000"}/callback/${id}`);
+
+const success = (res, name) => {
+  res.send(`
+    <h1>
+      Akun SSO anda telah sukses di verifikasi
+    </h1>
+    <p>
+      Selamat datang di UKOR FASILKOM UI, ${name}
+    </p>
+  `);
+}
+
+const failed = (res, reason) => {
+  res.send(`
+    <h1>
+      Verifikasi Gagal
+    </h1>
+    <p>
+      ${reason}
+    </p>
+  `);
+}
 
 const http = (client: Client, verifyRequests: Collection<string, GuildMember>) => {
   app.get('/verify/:id', (req, res) => {
@@ -33,30 +56,24 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
     if ("authenticationSuccess" in parse.serviceResponse) {
       const data = parse.serviceResponse.authenticationSuccess[0]
       const user = verifyRequests.get(req.params.id)
-
-      const role = user.guild.roles.cache
+      if (data.attributes[0].kd_org in jurusan) {
+        const role = user.guild.roles.cache
         .find((role) => role.name == process.env.AUTHORIZED_ROLE_NAME);
-      user.roles.add(role);
+        user.roles.add(role);
+        
+        verifyRequests.delete(req.params.id);
+
+        user.send(`Your data has been verified, welcome to UKOR ${data.attributes[0].nama}`);
+        return success(res, data.attributes[0].nama);
+      } else {
+        return failed(res, "Anda bukan mahasiswa Fasilkom UI.")
+      }
       
-      verifyRequests.delete(req.params.id);
-      user.send(`Your data has been verified, welcome to UKOR ${data.attributes[0].nama}`);
-      res.send(`
-        <h1>
-          Akun SSO anda telah sukses di verifikasi
-        </h1>
-        <p>
-          Selamat datang di UKOR FASILKOM UI, ${data.attributes[0].nama}
-        </p>
-      `);
     } else {
-      res.send(`
-        <h1>
-          Verifikasi Gagal
-        </h1>
-        <p>
-          Silahkan melakukan verifikasi ulang dengan mengirim u!verify ke channel #verification-request.
-        </p>
-      `);
+      return failed(
+        res, 
+        "Silahkan melakukan verifikasi ulang dengan mengirim u!verify ke channel #verification-request."
+      );
     }
   })
 
