@@ -7,6 +7,8 @@ const verify: Command = {
   name: "Verify",
   description: "Self explanatory.",
   execute: (message: Discord.Message, args: Array<string>) => {
+    if (message.member.roles.cache.some(role => role.name == process.env.AUTHORIZED_ROLE_NAME))
+      return;
     const request = verifyRequests.filter((item) => item.id === message.member.id);
     if (request.size != 0){
       message.reply("Link verifikasi telah terkirim ke DM anda.");

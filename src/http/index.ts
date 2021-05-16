@@ -19,6 +19,12 @@ const success = (res, name) => {
     <p>
       Selamat datang di UKOR FASILKOM UI, ${name}
     </p>
+    <p>
+      Silahkan mengisi data diri anda di:
+      <a href="https://forms.gle/NFCZqaKWKee7QGMn8">
+        https://forms.gle/NFCZqaKWKee7QGMn8
+      </a>
+    </p>
   `);
 }
 
