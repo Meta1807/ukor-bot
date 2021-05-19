@@ -69,7 +69,11 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
         
         verifyRequests.delete(req.params.id);
 
-        user.send(`Your data has been verified, welcome to UKOR ${data.attributes[0].nama}`);
+        user.send(
+          "Terimakasih telah melakukan verifikasi SSO anda. Kami mohon untuk mengisi data diri pada link form di bawah, untuk pendataan kami. Data ini tidak akan kami sebarluaskan dan hanya digunakan demi kepentingan UKOR E-Sport. :grinning: \n\n"
+          + "https://forms.gle/NFCZqaKWKee7QGMn8\n"
+          + "https://forms.gle/NFCZqaKWKee7QGMn8"
+        );
         return success(res, data.attributes[0].nama);
       } else {
         return failed(res, "Anda bukan mahasiswa Fasilkom UI.")
