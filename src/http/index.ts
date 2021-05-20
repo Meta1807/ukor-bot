@@ -64,6 +64,7 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
     if ("authenticationSuccess" in parse.serviceResponse) {
       const data = parse.serviceResponse.authenticationSuccess[0]
       const user = verifyRequests.get(req.params.id)
+      console.log(data.attributes[0].kd_org);
       console.log(user);
       if (data.attributes[0].kd_org in jurusan) {
         const role = user.guild.roles.cache
