@@ -59,30 +59,20 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
       tagNameProcessors: [stripPrefix],
     });
 
-    console.log(parse);
-
     if ("authenticationSuccess" in parse.serviceResponse) {
       const data = parse.serviceResponse.authenticationSuccess[0]
       const user = verifyRequests.get(req.params.id)
-      console.log(data.attributes[0].kd_org);
-      console.log(user);
-      if (data.attributes[0].kd_org in jurusan) {
-        const role = user.guild.roles.cache
-        .find((role) => role.name == process.env.AUTHORIZED_ROLE_NAME);
-        user.roles.add(role);
-        
-        verifyRequests.delete(req.params.id);
+      const role = user.guild.roles.cache
+      .find((role) => role.name == process.env.AUTHORIZED_ROLE_NAME);
+      user.roles.add(role);
+      verifyRequests.delete(req.params.id);
 
-        user.send(
-          "Terimakasih telah melakukan verifikasi SSO anda. Kami mohon untuk mengisi data diri pada link form di bawah, untuk pendataan kami. Data ini tidak akan kami sebarluaskan dan hanya digunakan demi kepentingan UKOR E-Sport. :grinning: \n\n"
-          + "https://forms.gle/NFCZqaKWKee7QGMn8\n"
-          + "https://forms.gle/NFCZqaKWKee7QGMn8"
-        );
-        return success(res, data.attributes[0].nama);
-      } else {
-        return failed(res, "Anda bukan mahasiswa Fasilkom UI.")
-      }
-      
+      user.send(
+        "Terimakasih telah melakukan verifikasi SSO anda. Kami mohon untuk mengisi data diri pada link form di bawah, untuk pendataan kami. Data ini tidak akan kami sebarluaskan dan hanya digunakan demi kepentingan UKOR E-Sport. :grinning: \n\n"
+        + "https://forms.gle/NFCZqaKWKee7QGMn8\n"
+        + "https://forms.gle/NFCZqaKWKee7QGMn8"
+      );
+      return success(res, data.attributes[0].nama);
     } else {
       return failed(
         res, 
