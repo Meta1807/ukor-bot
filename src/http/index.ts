@@ -59,6 +59,8 @@ const http = (client: Client, verifyRequests: Collection<string, GuildMember>) =
       tagNameProcessors: [stripPrefix],
     });
 
+    console.log(parse);
+
     if ("authenticationSuccess" in parse.serviceResponse) {
       const data = parse.serviceResponse.authenticationSuccess[0]
       const user = verifyRequests.get(req.params.id)
